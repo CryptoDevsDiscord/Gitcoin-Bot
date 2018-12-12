@@ -10,7 +10,8 @@ let lastFetch;
 
 const titles = [];
 
-const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true';
+const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
+    '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -23,10 +24,10 @@ const createEmbed = (issue) => {
   if (issue.experience_level) {
     fields.push({name: 'Difficulty', value: issue.experience_level});
   }
+  if (issue.keywords) {
+    fields.push({name: 'Keywords', value: issue.keywords});
+  }
   fields.push({
-    name: 'Keywords',
-    value: issue.keywords
-  }, {
     name: 'Reward',
     value: reward
   }, {
@@ -61,9 +62,9 @@ const getNewIssues = () => {
     .then((result) => {
       issues = Object.values(result.data);
       issues = issues
-        .slice(issues.length - 16)
-        .filter(issue => issue.network === 'mainnet')
+        .slice(0, 16)
         .filter(issue => !titles.includes(issue.title));
+      issues.reverse();
       const newIssues = issues.filter(issue => !oldIssues.includes(issue));
       console.log("Pushed new issues");
       const gitcoinChannel = client
@@ -93,16 +94,19 @@ client.on('ready', () => {
   axios
     .get(API_URL)
     .then((result) => {
-      issues = Object.values(result.data);
-      issues = issues
-        .slice(issues.length - 16)
-        .filter(issue => issue.network === 'mainnet');
+      issues = Object
+        .values(result.data)
+        .slice(0, 16);
+      issues.reverse();
       const channel = client
         .channels
         .get(process.env.GITCOIN_CHANNEL);
       issues
         .filter(issue => !titles.includes(issue.title))
-        .forEach(issue => channel.send(createEmbed(issue)));
+        .forEach(issue => {
+          console.log(createEmbed(issue).embed.fields)
+          channel.send(createEmbed(issue))
+        });
       oldIssues = issues;
       client.setInterval(getNewIssues, 20 * (1000 * 60));
       return true;
