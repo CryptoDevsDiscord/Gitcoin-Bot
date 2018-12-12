@@ -108,7 +108,7 @@ client.on('ready', () => {
           channel.send(createEmbed(issue))
         });
       oldIssues = issues;
-      client.setInterval(getNewIssues, 20 * (1000 * 60));
+      client.setInterval(getNewIssues, 60 * (1000 * 60));
       return true;
     })
     .catch(console.log);
