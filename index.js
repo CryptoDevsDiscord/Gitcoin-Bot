@@ -27,6 +27,9 @@ const createEmbed = (issue) => {
   if (issue.keywords) {
     fields.push({name: 'Keywords', value: issue.keywords});
   }
+  if (issue.attached_job_description) {
+    fields.push({name: 'Hiring', value: issue.attached_job_description});
+  }
   fields.push({
     name: 'Reward',
     value: reward
