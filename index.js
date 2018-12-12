@@ -58,15 +58,15 @@ const createEmbed = (issue) => {
   };
 };
 
-// TODO rewrite so it checks the message history and doesn't post duplicates
 const getNewIssues = () => {
   axios
     .get(API_URL)
     .then((result) => {
-      issues = Object.values(result.data);
-      issues = issues
+      issues = Object
+        .values(result.data)
         .slice(0, 16)
-        .filter(issue => !titles.includes(issue.title));
+        .filter(issue => !titles.includes(issue.title))
+        .map(createEmbed);
       issues.reverse();
       const newIssues = issues.filter(issue => !oldIssues.includes(issue));
       console.log("Pushed new issues");
@@ -74,8 +74,8 @@ const getNewIssues = () => {
         .channels
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
-        console.log(createEmbed(issue));
-        gitcoinChannel.send(createEmbed(issue));
+        console.log(issue.embed);
+        gitcoinChannel.send(issue);
       });
       oldIssues = issues;
       return true;
@@ -91,7 +91,11 @@ client.on('ready', () => {
     .fetchMessages()
     .then(msg => {
       const ids = msg.map(msg => msg.id);
-      ids.forEach(id => gitcoinChannel.fetchMessage(id).then(msg => titles.push(msg.embeds[0].title)))
+      ids.forEach(id => {
+        gitcoinChannel
+          .fetchMessage(id)
+          .then(msg => titles.push(msg.embeds[0].title))
+      })
     })
     .catch(console.error);
   axios
@@ -99,17 +103,17 @@ client.on('ready', () => {
     .then((result) => {
       issues = Object
         .values(result.data)
-        .slice(0, 16);
+        .slice(0, 16)
+        .filter(issue => !titles.includes(issue.title))
+        .map(createEmbed);
       issues.reverse();
       const channel = client
         .channels
         .get(process.env.GITCOIN_CHANNEL);
-      issues
-        .filter(issue => !titles.includes(issue.title))
-        .forEach(issue => {
-          console.log(createEmbed(issue).embed.fields)
-          channel.send(createEmbed(issue))
-        });
+      issues.forEach(issue => {
+        console.log(issue.embed)
+        channel.send(issue)
+      });
       oldIssues = issues;
       client.setInterval(getNewIssues, 60 * (1000 * 60));
       return true;
