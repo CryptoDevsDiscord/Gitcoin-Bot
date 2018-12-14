@@ -8,10 +8,10 @@ let issues;
 let oldIssues;
 let lastFetch;
 
-const titles = [];
+let titles = [];
 
 const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
-    '=mainnet';
+  '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -22,13 +22,22 @@ const createEmbed = (issue) => {
 
   const fields = [];
   if (issue.experience_level) {
-    fields.push({name: 'Difficulty', value: issue.experience_level});
+    fields.push({
+      name: 'Difficulty',
+      value: issue.experience_level
+    });
   }
   if (issue.keywords) {
-    fields.push({name: 'Keywords', value: issue.keywords});
+    fields.push({
+      name: 'Keywords',
+      value: issue.keywords
+    });
   }
   if (issue.attached_job_description) {
-    fields.push({name: 'Hiring', value: issue.attached_job_description});
+    fields.push({
+      name: 'Hiring',
+      value: issue.attached_job_description
+    });
   }
   fields.push({
     name: 'Reward',
@@ -64,7 +73,7 @@ const getNewIssues = () => {
     .then((result) => {
       issues = Object
         .values(result.data)
-        .slice(0, 16)
+        .slice(0, 20)
         .filter(issue => !titles.includes(issue.title))
         .map(createEmbed);
       issues.reverse();
@@ -74,7 +83,8 @@ const getNewIssues = () => {
         .channels
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
-        titles.push(issue.embed.title)
+        titles.unshift(issue.embed.title)
+        titles.pop()
         console.log(`New item pushed: ${issue.embed.title}`);
         gitcoinChannel.send(issue);
       });
@@ -94,13 +104,13 @@ client.on('ready', () => {
       const ids = msgs
         .filter(msg => msg.author.id === '521930921063088148')
         .map(msg => msg.id);
-      ids.forEach(id => {
+      ids.slice(0, 20).forEach(id => {
         gitcoinChannel
           .fetchMessage(id)
           .then(msg => {
-            titles.push(msg.embeds[0].title)
+            titles.push(msg.embeds[0].title.trim())
           })
-      })
+      });
     })
     .catch(console.error);
   axios
@@ -109,7 +119,7 @@ client.on('ready', () => {
       issues = Object
         .values(result.data)
         .slice(0, 16)
-        .filter(issue => !titles.includes(issue.title))
+        .filter(issue => !titles.includes(issue.title.trim()))
         .map(createEmbed);
       issues.reverse();
       const channel = client
@@ -117,7 +127,7 @@ client.on('ready', () => {
         .get(process.env.GITCOIN_CHANNEL);
       console.log(titles)
       issues.forEach(issue => {
-        titles.push(issue.embed.title)
+        titles.unshift(issue.embed.title)
         console.log(`New item pushed: ${issue.embed.title}`);
         channel.send(issue)
       });
