@@ -10,8 +10,7 @@ let lastFetch;
 
 let titles = [];
 
-const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
-  '=mainnet';
+const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -73,7 +72,7 @@ const getNewIssues = () => {
     .then((result) => {
       issues = Object
         .values(result.data)
-        .slice(0, 20)
+        .slice(0, 16)
         .filter(issue => !titles.includes(issue.title))
         .map(createEmbed);
       issues.reverse();
@@ -104,13 +103,15 @@ client.on('ready', () => {
       const ids = msgs
         .filter(msg => msg.author.id === '521930921063088148')
         .map(msg => msg.id);
-      ids.slice(0, 20).forEach(id => {
-        gitcoinChannel
-          .fetchMessage(id)
-          .then(msg => {
-            titles.push(msg.embeds[0].title.trim())
-          })
-      });
+      ids
+        .slice(0, 25)
+        .forEach(id => {
+          gitcoinChannel
+            .fetchMessage(id)
+            .then(msg => {
+              titles.push(msg.embeds[0].title.trim())
+            })
+        });
     })
     .catch(console.error);
   axios
