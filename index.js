@@ -83,7 +83,6 @@ const getNewIssues = () => {
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
         titles.unshift(issue.embed.title)
-        titles.pop()
         console.log(`New item pushed: ${issue.embed.title}`);
         gitcoinChannel.send(issue);
       });
