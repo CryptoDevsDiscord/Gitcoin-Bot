@@ -55,7 +55,7 @@ const createEmbed = (issue) => {
         name: client.user.username,
         icon_url: client.user.avatarURL
       },
-      title: issue.title,
+      title: issue.title.trim(),
       url: issue.url,
       fields,
       footer: {
@@ -83,6 +83,8 @@ const getNewIssues = () => {
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
         titles.unshift(issue.embed.title)
+        console.log(`In titles: ${title.includes(issue.embed.title)}`);
+        console.log(`${issue.embed.title}`);
         console.log(`New item pushed: ${issue.embed.title}.`);
         gitcoinChannel.send(issue);
       });
@@ -126,12 +128,14 @@ client.on('ready', () => {
         .get(process.env.GITCOIN_CHANNEL);
       console.log(titles)
       issues.forEach(issue => {
-        titles.unshift(issue.embed.title.trim())
-        console.log(`New item pushed: ${issue.embed.title}.`);
+        titles.unshift(issue.embed.title);
+        console.log(`In titles: ${title.includes(issue.embed.title)}`);
+        console.log(`.${issue.embed.title}.`);
+        console.log(`New item pushed: .${issue.embed.title}.`);
         channel.send(issue)
       });
       oldIssues = issues;
-      client.setInterval(getNewIssues, 60 * (1000 * 60));
+      client.setInterval(getNewIssues, 2 * (1000 * 60));
       return true;
     })
     .catch(console.log);
