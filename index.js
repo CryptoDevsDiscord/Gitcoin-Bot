@@ -104,7 +104,6 @@ client.on('ready', () => {
         .filter(msg => msg.author.id === '521930921063088148')
         .map(msg => msg.id);
       ids
-        .slice(0, 25)
         .forEach(id => {
           gitcoinChannel
             .fetchMessage(id)
