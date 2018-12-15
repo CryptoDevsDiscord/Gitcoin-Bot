@@ -73,7 +73,7 @@ const getNewIssues = () => {
       issues = Object
         .values(result.data)
         .slice(0, 16)
-        .filter(issue => !titles.includes(issue.title))
+        .filter(issue => !titles.includes(issue.title.trim()))
         .map(createEmbed);
       issues.reverse();
       const newIssues = issues.filter(issue => !oldIssues.includes(issue));
@@ -83,7 +83,7 @@ const getNewIssues = () => {
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
         titles.unshift(issue.embed.title)
-        console.log(`New item pushed: ${issue.embed.title}`);
+        console.log(`New item pushed: ${issue.embed.title}.`);
         gitcoinChannel.send(issue);
       });
       oldIssues = issues;
@@ -126,8 +126,8 @@ client.on('ready', () => {
         .get(process.env.GITCOIN_CHANNEL);
       console.log(titles)
       issues.forEach(issue => {
-        titles.unshift(issue.embed.title)
-        console.log(`New item pushed: ${issue.embed.title}`);
+        titles.unshift(issue.embed.title.trim())
+        console.log(`New item pushed: ${issue.embed.title}.`);
         channel.send(issue)
       });
       oldIssues = issues;
