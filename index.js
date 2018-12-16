@@ -10,7 +10,8 @@ let lastFetch;
 
 let titles = [];
 
-const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network=mainnet';
+const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
+    '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -21,22 +22,13 @@ const createEmbed = (issue) => {
 
   const fields = [];
   if (issue.experience_level) {
-    fields.push({
-      name: 'Difficulty',
-      value: issue.experience_level
-    });
+    fields.push({name: 'Difficulty', value: issue.experience_level});
   }
   if (issue.keywords) {
-    fields.push({
-      name: 'Keywords',
-      value: issue.keywords
-    });
+    fields.push({name: 'Keywords', value: issue.keywords});
   }
   if (issue.attached_job_description) {
-    fields.push({
-      name: 'Hiring',
-      value: issue.attached_job_description
-    });
+    fields.push({name: 'Hiring', value: issue.attached_job_description});
   }
   fields.push({
     name: 'Reward',
@@ -55,7 +47,9 @@ const createEmbed = (issue) => {
         name: client.user.username,
         icon_url: client.user.avatarURL
       },
-      title: issue.title.trim(),
+      title: issue
+        .title
+        .trim(),
       url: issue.url,
       fields,
       footer: {
@@ -103,15 +97,15 @@ client.on('ready', () => {
     .then(msgs => {
       const ids = msgs
         .filter(msg => msg.author.id === '521930921063088148')
+        .slice(0, 50)
         .map(msg => msg.id);
-      ids
-        .forEach(id => {
-          gitcoinChannel
-            .fetchMessage(id)
-            .then(msg => {
-              titles.push(msg.embeds[0].title.trim())
-            })
-        });
+      ids.forEach(id => {
+        gitcoinChannel
+          .fetchMessage(id)
+          .then(msg => {
+            titles.push(msg.embeds[0].title.trim())
+          })
+      });
     })
     .catch(console.error);
   axios
@@ -129,7 +123,7 @@ client.on('ready', () => {
       console.log(titles)
       issues.forEach(issue => {
         titles.unshift(issue.embed.title);
-        console.log(`In titles: ${title.includes(issue.embed.title)}`);
+        console.log(`In titles: ${titles.includes(issue.embed.title)}`);
         console.log(`.${issue.embed.title}.`);
         console.log(`New item pushed: .${issue.embed.title}.`);
         channel.send(issue)
