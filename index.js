@@ -61,24 +61,25 @@ const createEmbed = (issue) => {
 };
 
 const getNewIssues = () => {
+  console.log(`Checking for new bounties...`)
   axios
     .get(API_URL)
     .then((result) => {
       issues = Object
         .values(result.data)
         .slice(0, 16)
-        .filter(issue => !titles.includes(issue.title.trim()))
-        .map(createEmbed);
+        .map(createEmbed)
+        .filter(issue => !titles.includes(issue.embed.title));
       issues.reverse();
       const newIssues = issues.filter(issue => !oldIssues.includes(issue));
       console.log(titles)
+      console.log(issues)
       const gitcoinChannel = client
         .channels
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
-        titles.unshift(issue.embed.title)
         console.log(`In titles: ${title.includes(issue.embed.title)}`);
-        console.log(`${issue.embed.title}`);
+        titles.unshift(issue.embed.title)
         console.log(`New item pushed: ${issue.embed.title}.`);
         gitcoinChannel.send(issue);
       });
