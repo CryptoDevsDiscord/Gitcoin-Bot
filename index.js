@@ -97,7 +97,6 @@ client.on('ready', () => {
     .then(msgs => {
       const ids = msgs
         .filter(msg => msg.author.id === '521930921063088148')
-        .slice(0, 50)
         .map(msg => msg.id);
       ids.forEach(id => {
         gitcoinChannel
