@@ -11,7 +11,7 @@ let lastFetch;
 let titles = [];
 
 const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
-    '=mainnet';
+  '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -22,13 +22,22 @@ const createEmbed = (issue) => {
 
   const fields = [];
   if (issue.experience_level) {
-    fields.push({name: 'Difficulty', value: issue.experience_level});
+    fields.push({
+      name: 'Difficulty',
+      value: issue.experience_level
+    });
   }
   if (issue.keywords) {
-    fields.push({name: 'Keywords', value: issue.keywords});
+    fields.push({
+      name: 'Keywords',
+      value: issue.keywords
+    });
   }
   if (issue.attached_job_description) {
-    fields.push({name: 'Hiring', value: issue.attached_job_description});
+    fields.push({
+      name: 'Hiring',
+      value: issue.attached_job_description
+    });
   }
   fields.push({
     name: 'Reward',
@@ -85,7 +94,8 @@ const getNewIssues = () => {
       });
       oldIssues = issues;
       return true;
-    });
+    })
+    .catch(console.log);
 };
 
 client.on('ready', () => {
@@ -114,8 +124,8 @@ client.on('ready', () => {
       issues = Object
         .values(result.data)
         .slice(0, 16)
-        .filter(issue => !titles.includes(issue.title.trim()))
-        .map(createEmbed);
+        .map(createEmbed)
+        .filter(issue => !titles.includes(issue.embed.title));
       issues.reverse();
       const channel = client
         .channels
