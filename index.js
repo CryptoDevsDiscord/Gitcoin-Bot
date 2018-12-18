@@ -78,7 +78,7 @@ const getNewIssues = () => {
         .channels
         .get(process.env.GITCOIN_CHANNEL);
       issues.forEach((issue) => {
-        console.log(`In titles: ${title.includes(issue.embed.title)}`);
+        console.log(`In titles: ${titles.includes(issue.embed.title)}`);
         titles.unshift(issue.embed.title)
         console.log(`New item pushed: ${issue.embed.title}.`);
         gitcoinChannel.send(issue);
