@@ -44,7 +44,7 @@ const createEmbed = (issue) => {
     value: reward
   }, {
     name: 'Expires',
-    value: `${expire.getMonth()}/${expire.getDate()}/${expire.getFullYear()}${issue.can_submit_after_expiration_date
+    value: `${expire.getMonth() + 1}/${expire.getDate()}/${expire.getFullYear()}${issue.can_submit_after_expiration_date
       ? ' (Can submit after expiration)'
       : ''}`
   });
