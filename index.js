@@ -11,7 +11,7 @@ let lastFetch;
 let titles = [];
 
 const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
-  '=mainnet';
+    '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -22,22 +22,13 @@ const createEmbed = (issue) => {
 
   const fields = [];
   if (issue.experience_level) {
-    fields.push({
-      name: 'Difficulty',
-      value: issue.experience_level
-    });
+    fields.push({name: 'Difficulty', value: issue.experience_level});
   }
   if (issue.keywords) {
-    fields.push({
-      name: 'Keywords',
-      value: issue.keywords
-    });
+    fields.push({name: 'Keywords', value: issue.keywords});
   }
   if (issue.attached_job_description) {
-    fields.push({
-      name: 'Hiring',
-      value: issue.attached_job_description
-    });
+    fields.push({name: 'Hiring', value: issue.attached_job_description});
   }
   fields.push({
     name: 'Reward',
@@ -97,6 +88,8 @@ const getNewIssues = () => {
     })
     .catch(console.log);
 };
+
+client.on('error', console.error);
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
