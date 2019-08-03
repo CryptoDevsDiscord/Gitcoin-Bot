@@ -6,7 +6,7 @@ const client = new Discord.Client();
 
 let issues;
 let oldIssues;
-let lastFetch;
+//let lastFetch;
 
 let titles = [];
 
@@ -71,7 +71,7 @@ const getNewIssues = () => {
         .map(createEmbed)
         .filter(issue => !titles.includes(issue.embed.title));
       issues.reverse();
-      const newIssues = issues.filter(issue => !oldIssues.includes(issue));
+//      const newIssues = issues.filter(issue => !oldIssues.includes(issue));
       console.log(titles)
       console.log(issues)
       const gitcoinChannel = client
