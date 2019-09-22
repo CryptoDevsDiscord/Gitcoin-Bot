@@ -132,7 +132,7 @@ client.on('ready', () => {
         channel.send(issue)
       });
       oldIssues = issues;
-      client.setInterval(getNewIssues, 60 * (1000 * 60));
+      client.setInterval(getNewIssues, 5 * (1000 * 60));
       return true;
     })
     .catch(console.log);
