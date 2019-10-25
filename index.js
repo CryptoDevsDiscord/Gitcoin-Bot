@@ -10,8 +10,7 @@ let oldIssues;
 
 let titles = [];
 
-const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
-    '=mainnet';
+const API_URL = 'https://gitcoin.co/api/v0.1/bounties/?is_open=true&order_by=-web3_created&network' + '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
