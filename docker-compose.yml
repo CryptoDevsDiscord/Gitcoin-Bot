@@ -1,0 +1,7 @@
+version: "3.5"
+services:
+  gitcoin-bot:
+    image: gitcoin:latest
+    environment: 
+      - BOT_TOKEN=CHANGEME
+      - GITCOIN_CHANNEL=CHANGEME
